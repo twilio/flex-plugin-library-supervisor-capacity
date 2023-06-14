@@ -20,4 +20,4 @@ export interface UIAttributes extends FlexUIAttributes {
 }
 const { custom_data } = Flex.Manager.getInstance().configuration as UIAttributes;
 
-export const { capacityRules } = custom_data?.features?.supervisor_capacity || {};
+export const { rules } = custom_data?.features?.supervisor_capacity || {};

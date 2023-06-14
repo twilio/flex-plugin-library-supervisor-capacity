@@ -7,7 +7,7 @@ import { IWorker } from '@twilio/flex-ui';
 
 import { SectionHeader } from './CapacityContainerStyles';
 import TaskRouterService, {WorkerChannelCapacityResponse} from '../../service/TaskRouterService';
-import { capacityRules } from '../../types/ServiceConfiguration';
+import { rules as capacityRules } from '../../types/ServiceConfiguration';
 import CapacityChannel from '../CapacityChannel';
 
 export interface OwnProps {

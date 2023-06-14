@@ -11,10 +11,9 @@ exports.handler = prepareFlexFunction(requiredParameters, async (context, event,
       workerSid,
       attempts: 0,
     });
-    const { status, workerChannels } = result;
-
+    const { success, status, workerChannels } = result;
     response.setStatusCode(status);
-    response.setBody({ workerChannels });
+    response.setBody({ success:success, workerChannels:workerChannels });
     return callback(null, response);
   } catch (error) {
     return handleError(error);

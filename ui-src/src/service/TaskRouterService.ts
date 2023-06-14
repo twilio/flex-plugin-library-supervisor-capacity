@@ -1,24 +1,6 @@
-import { TaskAssignmentStatus } from '../types/Task';
-import { merge } from 'lodash';
-import { TaskHelper } from '@twilio/flex-ui';
-
 import ApiService from './ApiService';
 import { EncodedParams } from '../types/Params';
 
-export interface Queue {
-  targetWorkers: string;
-  friendlyName: string;
-  sid: string;
-}
-
-interface UpdateTaskAttributesResponse {
-  success: boolean;
-}
-
-interface GetQueuesResponse {
-  success: boolean;
-  queues: Array<Queue>;
-}
 
 interface GetWorkerChannelsResponse {
   success: boolean;
@@ -46,119 +28,16 @@ interface UpdateWorkerChannelResponse {
   workerChannelCapacity: WorkerChannelCapacityResponse;
 }
 
-let queues = null as null | Array<Queue>;
 
 class TaskRouterService extends ApiService {
   private instanceSid = this.manager.serviceConfiguration.flex_service_instance_sid;
 
-  private STORAGE_KEY = `pending_task_updates_${this.instanceSid}`;
-
-  addToLocalStorage(taskSid: string, attributesUpdate: object): void {
-    const storageValue = localStorage.getItem(this.STORAGE_KEY);
-    let storageObject = {} as { [taskSid: string]: any };
-
-    if (storageValue) {
-      storageObject = JSON.parse(storageValue);
-    }
-
-    if (!storageObject[taskSid]) {
-      storageObject[taskSid] = {};
-    }
-
-    storageObject[taskSid] = merge({}, storageObject[taskSid], attributesUpdate);
-
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(storageObject));
-  }
-
-  fetchFromLocalStorage(taskSid: string): any {
-    const storageValue = localStorage.getItem(this.STORAGE_KEY);
-    let storageObject = {} as { [taskSid: string]: any };
-
-    if (storageValue) {
-      storageObject = JSON.parse(storageValue);
-    }
-
-    if (!storageObject[taskSid]) {
-      storageObject[taskSid] = {};
-    }
-
-    return storageObject[taskSid];
-  }
-
-  removeFromLocalStorage(taskSid: string): void {
-    const storageValue = localStorage.getItem(this.STORAGE_KEY);
-    let storageObject = {} as { [taskSid: string]: any };
-    let changed = false;
-
-    if (storageValue) {
-      storageObject = JSON.parse(storageValue);
-    }
-
-    if (storageObject[taskSid]) {
-      delete storageObject[taskSid];
-      changed = true;
-    }
-
-    // Janitor - clean up any tasks that we don't have
-    for (const [key] of Object.entries(storageObject)) {
-      if (!TaskHelper.getTaskByTaskSid(key)) {
-        delete storageObject[key];
-        changed = true;
-      }
-    }
-
-    if (changed) {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(storageObject));
-    }
-  }
-
-  async updateTaskAttributes(
-    taskSid: string,
-    attributesUpdate: object,
-    deferUpdates: boolean = false,
-  ): Promise<boolean> {
-    if (deferUpdates) {
-      // Defer update; merge new attrs into local storage
-      this.addToLocalStorage(taskSid, attributesUpdate);
-      return true;
-    }
-
-    // Fetch attrs from local storage and merge into the provided attrs
-    const mergedAttributesUpdate = merge({}, this.fetchFromLocalStorage(taskSid), attributesUpdate);
-    if (Object.keys(mergedAttributesUpdate).length < 1) {
-      // No attributes provided to update
-      return true;
-    }
-
-    const result = await this.updateTaskAttributess(taskSid, JSON.stringify(mergedAttributesUpdate));
-
-    if (result.success) {
-      // we've pushed updates; remove pending attributes
-      this.removeFromLocalStorage(taskSid);
-    }
-
-    return result.success;
-  }
-
-  async updateTaskAssignmentStatus(taskSid: string, assignmentStatus: TaskAssignmentStatus): Promise<boolean> {
-    const result = await this.updateTaskAssignmentStatuss(taskSid, assignmentStatus);
-
-    return result.success;
-  }
-
-  // does a one time fetch for queues per session
-  // since queue configuration seldom changes
-  async getQueues(force?: boolean): Promise<Array<Queue> | null> {
-    if (queues && !force) return queues;
-
-    const response = await this.getQueuess();
-    if (response.success) queues = response.queues;
-    return queues;
-  }
 
   async getWorkerChannels(workerSid: string): Promise<Array<WorkerChannelCapacityResponse>> {
-    const response = await this.getWorkerChannelss(workerSid);
-    if (response.success) return response.workerChannels;
+    const response = await this.getWorkerChannel(workerSid);
+    if (response && response.workerChannels){
+      return response.workerChannels;
+    } 
     return [];
   }
 
@@ -173,69 +52,7 @@ class TaskRouterService extends ApiService {
     return result.success;
   }
 
-  updateTaskAssignmentStatuss = async (
-    taskSid: string,
-    assignmentStatus: TaskAssignmentStatus,
-  ): Promise<UpdateTaskAttributesResponse> => {
-    const encodedParams: EncodedParams = {
-      Token: encodeURIComponent(this.manager.user.token),
-      taskSid: encodeURIComponent(taskSid),
-      assignmentStatus: encodeURIComponent(assignmentStatus),
-    };
-
-    return this.fetchJsonWithReject<UpdateTaskAttributesResponse>(
-      `https://${this.serverlessDomain}/supervisorCapacity/update-task-assignment-status`,
-      {
-        method: 'post',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: this.buildBody(encodedParams),
-      },
-    ).then((response): UpdateTaskAttributesResponse => {
-      return {
-        ...response,
-      };
-    });
-  };
-
-  updateTaskAttributess = async (taskSid: string, attributesUpdate: string): Promise<UpdateTaskAttributesResponse> => {
-    const encodedParams: EncodedParams = {
-      Token: encodeURIComponent(this.manager.user.token),
-      taskSid: encodeURIComponent(taskSid),
-      attributesUpdate: encodeURIComponent(attributesUpdate),
-    };
-
-    return this.fetchJsonWithReject<UpdateTaskAttributesResponse>(
-      `https://${this.serverlessDomain}/supervisorCapacity/update-task-attributes`,
-      {
-        method: 'post',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: this.buildBody(encodedParams),
-      },
-    ).then((response): UpdateTaskAttributesResponse => {
-      return {
-        ...response,
-      };
-    });
-  };
-
-  getQueuess = async (): Promise<GetQueuesResponse> => {
-    const encodedParams: EncodedParams = {
-      Token: encodeURIComponent(this.manager.user.token),
-    };
-
-    return this.fetchJsonWithReject<GetQueuesResponse>(
-      `https://${this.serverlessDomain}/supervisorCapacity/get-queues`,
-      {
-        method: 'post',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: this.buildBody(encodedParams),
-      },
-    ).then((response): GetQueuesResponse => {
-      return response;
-    });
-  };
-
-  getWorkerChannelss = async (workerSid: string): Promise<GetWorkerChannelsResponse> => {
+  getWorkerChannel = async (workerSid: string): Promise<GetWorkerChannelsResponse> => {
     const encodedParams: EncodedParams = {
       workerSid: encodeURIComponent(workerSid),
       Token: encodeURIComponent(this.manager.user.token),
@@ -249,6 +66,7 @@ class TaskRouterService extends ApiService {
         body: this.buildBody(encodedParams),
       },
     ).then((response): GetWorkerChannelsResponse => {
+      console.log(`Response: ${JSON.stringify(response.success)}`);
       return response;
     });
   };

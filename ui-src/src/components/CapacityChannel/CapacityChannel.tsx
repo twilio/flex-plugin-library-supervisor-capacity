@@ -6,7 +6,7 @@ import { Flex } from '@twilio-paste/core/flex';
 import { Input } from '@twilio-paste/core/input';
 import { DeleteIcon } from '@twilio-paste/icons/esm/DeleteIcon';
 import { WorkerChannelCapacityResponse } from '../../service/TaskRouterService';
-import { capacityRules } from '../../types/ServiceConfiguration';
+import { rules as capacityRules } from '../../types/ServiceConfiguration';
 
 export interface OwnProps {
   isSaving: boolean;
@@ -46,7 +46,6 @@ export default function CapacityChannel(props: OwnProps) {
     let max;
 
     const rules = capacityRules;
-
     if (rules && rules[props.workerChannel.taskChannelUniqueName]) {
       min = rules[props.workerChannel.taskChannelUniqueName].min;
       max = rules[props.workerChannel.taskChannelUniqueName].max;
