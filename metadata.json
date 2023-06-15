@@ -1,0 +1,24 @@
+{
+    "name":"flex-supervisor-capacity-plugin",
+    "friendly_name" :"Supervisor capacity",
+    "description":"Implements a Channel Capacity panel in the Twilio Flex Teams View",
+    "support":"flex-runtime-support@twilio.com@gmail.com",
+    "created_by":"Twilio",
+    "twilio_managed":"false",
+    "repo_url" : "https://github.com/twilio/flex-plugin-library-supervisor-capacity",
+    "version_details" : {
+      "version":"1.0.0",
+      "compatible_with":"2.1.1 onwards",
+      "released_by":"flex-runtime-team",
+      "changelog":"",
+      "attributes" : [{
+        "name": "TWILIO_FLEX_WORKSPACE_SID",
+        "friendly_name": "Flex Voice Workspace ID",
+        "data_type": "string",
+        "type":"SERVERLESS",
+        "description" : "Flex Voice Workspace SID",
+        "help_link" : ""
+      }
+      ]
+    }
+}
