@@ -1,4 +1,3 @@
-import * as FLEX from '@twilio/flex-ui';
 import React, { useEffect, useState } from 'react';
 import { Button } from '@twilio-paste/core/button';
 import { Switch } from '@twilio-paste/core/switch';
