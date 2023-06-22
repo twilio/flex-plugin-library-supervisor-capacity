@@ -4,7 +4,7 @@ import packageJSON from '../../package.json';
 const flexManager = window?.Twilio?.Flex?.Manager?.getInstance();
 
 export enum Event {
-  WORKER_CHANNEL_CAPACITY_UPDATED = 'Worker channel capacity updated',
+  WORKER_CHANNELS_SET = 'Worker Channels Set',
 }
 
 type CommonPropertiesType = {

@@ -91,7 +91,9 @@ export default function CapacityContainer(props: OwnProps) {
       }),
     );
 
-    Analytics.track(Event.WORKER_CHANNEL_CAPACITY_UPDATED,{});
+    Analytics.track(Event.WORKER_CHANNELS_SET,{
+      capacityWorkerSid: props?.worker?.sid
+    });
     // fetch what was saved and reset our state
     await listChannels();
     await reset();
