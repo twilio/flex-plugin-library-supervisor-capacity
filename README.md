@@ -2,6 +2,8 @@
 
 ### How it works
 
+<img src="screenshots/supervisor-capacity.png" alt="Supervisor capacity" width="50%"/>
+
 - Implements a Channel Capacity panel in the [Twilio Flex Teams View](https://flex.twilio.com/teams/)
 - Supervisors may configure each worker's capacity per channel, as well as whether or not a worker is eligible to receive tasks for that channel.
 - Optionally, we may also include a `rules` object in the feature configuration. Within the rules object, you may specify which channels should be displayed, and the allowed capacity range for that channel. If the rules object is present, only the channels specified will be displayed. If the rules object is not present, all channels will be displayed.
@@ -101,9 +103,8 @@ Copy `.env.example` to `.env` inside the ui-src folder and set the serverless do
 
 Run the following command from the ```ui-src``` to start the deployment:
 
-```bash
-twilio flex:plugins:deploy --major --changelog "Notes for this version" --description "Functionality of the plugin"
-```
+
+`twilio flex:plugins:deploy --major --changelog "Notes for this version" --description "Functionality of the plugin"`
 
 After your deployment runs you will receive instructions for releasing your plugin from the bash prompt. You can use this or skip this step and release your plugin from the Flex plugin dashboard here https://flex.twilio.com/admin/plugins
 
