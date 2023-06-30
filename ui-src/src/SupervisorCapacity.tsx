@@ -3,7 +3,7 @@ import * as Flex from '@twilio/flex-ui';
 import { FlexPlugin } from '@twilio/flex-plugin';
 
 import CustomizePasteElements from './utils/PasteThemeProvider';
-import addCapacityToWorkerCanvas from './flex-hooks/components/WorkerCanvas'
+import addCapacityToWorkerCanvas from './flex-hooks/components/WorkerCanvas';
 const PLUGIN_NAME = 'SupervisorCapacity';
 
 export default class SupervisorCapacity extends FlexPlugin {
@@ -18,10 +18,7 @@ export default class SupervisorCapacity extends FlexPlugin {
    * @param flex { typeof Flex }
    */
   async init(flex: typeof Flex, manager: Flex.Manager): Promise<void> {
-    const initializers = [
-      CustomizePasteElements,
-      addCapacityToWorkerCanvas
-    ];
+    const initializers = [CustomizePasteElements, addCapacityToWorkerCanvas];
 
     initializers.forEach((initializer) => initializer(flex, manager));
   }
