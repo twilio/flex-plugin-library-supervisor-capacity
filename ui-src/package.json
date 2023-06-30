@@ -1,8 +1,8 @@
 {
-  "name": "plibc-flex-plugin-library-supervisor-capacity",
+  "name": "plibc-supervisor-capacity",
   "version": "1.0.0",
   "private": true,
-  "id": "plibc-flex-plugin-library-supervisor-capacity",
+  "id": "plibc-supervisor-capacity",
   "scripts": {
     "prebuild": "rimraf build && npm run bootstrap",
     "postinstall": "flex-plugin pre-script-check",

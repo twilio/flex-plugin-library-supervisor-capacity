@@ -1,5 +1,5 @@
 {
-  "name": "plibc-flex-plugin-library-supervisor-capacity",
+  "name": "plibc-supervisor-capacity",
   "version": "1.0.0",
   "private": true,
   "scripts": {
