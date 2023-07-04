@@ -15,7 +15,8 @@
     "@twilio-labs/serverless-runtime-types": "^2.2.3",
     "@twilio-labs/serverless-api": "^5.5.0",
     "lodash": "^4.17.21",
-    "twilio-flex-token-validator": "1.5.8"
+    "twilio-flex-token-validator": "1.5.8",
+    "twilio": "^4.0.0"
   },
   "devDependencies": {
     "@babel/preset-env": "7.20.2",
@@ -36,7 +37,6 @@
     "twilio-run": "3.4.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-select": "^5.5.0",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",
     "eslint": "^8.34.0",
