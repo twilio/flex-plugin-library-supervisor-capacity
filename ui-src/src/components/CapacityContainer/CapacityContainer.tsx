@@ -6,10 +6,10 @@ import { Text } from '@twilio-paste/core/text';
 import { IWorker } from '@twilio/flex-ui';
 
 import { SectionHeader } from './CapacityContainerStyles';
-import TaskRouterService, {WorkerChannelCapacityResponse} from '../../service/TaskRouterService';
+import TaskRouterService, { WorkerChannelCapacityResponse } from '../../service/TaskRouterService';
 import { rules as capacityRules } from '../../types/ServiceConfiguration';
 import CapacityChannel from '../CapacityChannel';
-import Analytics, {Event} from '../../utils/Analytics';
+import Analytics, { Event } from '../../utils/Analytics';
 
 export interface OwnProps {
   worker?: IWorker;
@@ -91,8 +91,8 @@ export default function CapacityContainer(props: OwnProps) {
       }),
     );
 
-    Analytics.track(Event.WORKER_CHANNELS_SET,{
-      capacityWorkerSid: props?.worker?.sid
+    Analytics.track(Event.WORKER_CHANNELS_SET, {
+      capacityWorkerSid: props?.worker?.sid,
     });
     // fetch what was saved and reset our state
     await listChannels();

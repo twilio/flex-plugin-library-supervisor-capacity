@@ -28,16 +28,14 @@ interface UpdateWorkerChannelResponse {
   workerChannelCapacity: WorkerChannelCapacityResponse;
 }
 
-
 class TaskRouterService extends ApiService {
-
   getWorkerChannels = async (workerSid: string): Promise<Array<WorkerChannelCapacityResponse>> => {
-    return new Promise((resolve,reject)=>{
+    return new Promise((resolve, reject) => {
       const encodedParams: EncodedParams = {
         workerSid: encodeURIComponent(workerSid),
         Token: encodeURIComponent(this.manager.user.token),
       };
-  
+
       this.fetchJsonWithReject<GetWorkerChannelsResponse>(
         `https://${this.serverlessDomain}/supervisorCapacity/get-worker-channels`,
         {
@@ -45,31 +43,26 @@ class TaskRouterService extends ApiService {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: this.buildBody(encodedParams),
         },
-      ).then((response : GetWorkerChannelsResponse) => {
-        if(response && response.workerChannels){
-          resolve(response.workerChannels);
-        }
-        resolve([]);
-      })
-      .catch((e)=>{
-        console.error(`Could not get worker channel for the worker ${workerSid}`, e);
-        ErrorManager.createAndProcessError(
-          `Could not get worker channel for the worker ${workerSid}\r\n`,
-          {
+      )
+        .then((response: GetWorkerChannelsResponse) => {
+          if (response && response.workerChannels) {
+            resolve(response.workerChannels);
+          }
+          resolve([]);
+        })
+        .catch((e) => {
+          console.error(`Could not get worker channel for the worker ${workerSid}`, e);
+          ErrorManager.createAndProcessError(`Could not get worker channel for the worker ${workerSid}\r\n`, {
             type: FlexPluginErrorType.serverless,
             description:
-              e instanceof Error
-                ? `${e.message}`
-                : `Could not get worker channel for the worker ${workerSid}\r\n`,
+              e instanceof Error ? `${e.message}` : `Could not get worker channel for the worker ${workerSid}\r\n`,
             context: 'Plugin.TaskRouterService',
             wrappedError: e,
-          },
-        );
-        reject(e);
-      });
+          });
+          reject(e);
+        });
     });
-  }
-
+  };
 
   updateWorkerChannel = async (
     workerSid: string,
@@ -77,7 +70,7 @@ class TaskRouterService extends ApiService {
     capacity: number,
     available: boolean,
   ): Promise<boolean> => {
-    return new Promise((resolve,reject) =>{
+    return new Promise((resolve, reject) => {
       const encodedParams: EncodedParams = {
         Token: encodeURIComponent(this.manager.user.token),
         workerSid: encodeURIComponent(workerSid),
@@ -85,7 +78,7 @@ class TaskRouterService extends ApiService {
         capacity: encodeURIComponent(capacity),
         available: encodeURIComponent(available),
       };
-  
+
       return this.fetchJsonWithReject<UpdateWorkerChannelResponse>(
         `https://${this.serverlessDomain}/supervisorCapacity/update-worker-channel`,
         {
@@ -93,27 +86,23 @@ class TaskRouterService extends ApiService {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: this.buildBody(encodedParams),
         },
-      ).then((response: UpdateWorkerChannelResponse) => {
-        resolve(response.success);
-      })
-      .catch((e)=>{
-        console.error(`Could not update worker channels for the worker ${workerSid}`, e);
-        ErrorManager.createAndProcessError(
-          `Could not update worker channels for the worker ${workerSid}\r\n`,
-          {
+      )
+        .then((response: UpdateWorkerChannelResponse) => {
+          resolve(response.success);
+        })
+        .catch((e) => {
+          console.error(`Could not update worker channels for the worker ${workerSid}`, e);
+          ErrorManager.createAndProcessError(`Could not update worker channels for the worker ${workerSid}\r\n`, {
             type: FlexPluginErrorType.serverless,
             description:
-              e instanceof Error
-                ? `${e.message}`
-                : `Could not update worker channels for the worker ${workerSid}\r\n`,
+              e instanceof Error ? `${e.message}` : `Could not update worker channels for the worker ${workerSid}\r\n`,
             context: 'Plugin.TaskRouterService',
             wrappedError: e,
-          },
-        );
-        reject(e);
-      });
+          });
+          reject(e);
+        });
     });
-  }
+  };
 }
 
 export default new TaskRouterService();
