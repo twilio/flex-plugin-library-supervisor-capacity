@@ -37,7 +37,7 @@ class TaskRouterService extends ApiService {
       };
 
       this.fetchJsonWithReject<GetWorkerChannelsResponse>(
-        `https://${this.serverlessDomain}/supervisorCapacity/get-worker-channels`,
+        `${this.serverlessDomain}/supervisorCapacity/get-worker-channels`,
         {
           method: 'post',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -80,7 +80,7 @@ class TaskRouterService extends ApiService {
       };
 
       return this.fetchJsonWithReject<UpdateWorkerChannelResponse>(
-        `https://${this.serverlessDomain}/supervisorCapacity/update-worker-channel`,
+        `${this.serverlessDomain}/supervisorCapacity/update-worker-channel`,
         {
           method: 'post',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
