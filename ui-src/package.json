@@ -1,6 +1,6 @@
 {
   "name": "plibc-supervisor-capacity",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "private": true,
   "id": "plibc-supervisor-capacity",
   "scripts": {
