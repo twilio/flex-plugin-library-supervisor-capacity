@@ -1,7 +1,4 @@
-const { merge, isString, isObject, isNumber, isBoolean, omitBy, isNil } = require('lodash');
-const axios = require('axios');
-
-const retryHandler = require(Runtime.getFunctions()['twilio-wrappers/retry-handler'].path).retryHandler;
+import { TaskRouterUtils } from '@twilio/flex-plugins-library-utils';
 
 /**
  * @param {object} parameters the parameters for the function
@@ -15,24 +12,21 @@ const retryHandler = require(Runtime.getFunctions()['twilio-wrappers/retry-handl
 exports.getWorkerChannels = async function updateWorkerChannel(parameters) {
   const { context, workerSid } = parameters;
 
-  if (!isObject(context)) throw new Error('Invalid parameters object passed. Parameters must contain context object');
-  if (!isString(workerSid))
-    throw new Error('Invalid parameters object passed. Parameters must contain workerSid string');
+  const config = {
+    attempts: 3,
+    workerSid,
+  };
 
+  const client = context.getTwilioClient();
+  const taskRouterClient = new TaskRouterUtils(client, config);
   try {
-    const client = context.getTwilioClient();
-    const workerChannels = await client.taskrouter.v1
-      .workspaces(process.env.TWILIO_FLEX_WORKSPACE_SID)
-      .workers(workerSid)
-      .workerChannels.list();
+    const workerChannels = await taskRouterClient.getWorkerChannels(config);
 
     return {
-      success: true,
-      status: 200,
-      workerChannels,
+      ...workerChannels,
     };
   } catch (error) {
-    return retryHandler(error, parameters, exports.getWorkerChannels);
+    return { success: false, status: error.status, message: error.message };
   }
 };
 
@@ -47,30 +41,24 @@ exports.getWorkerChannels = async function updateWorkerChannel(parameters) {
 exports.updateWorkerChannel = async function updateWorkerChannel(parameters) {
   const { context, workerSid, workerChannelSid, capacity, available } = parameters;
 
-  if (!isObject(context)) throw new Error('Invalid parameters object passed. Parameters must contain context object');
-  if (!isString(workerSid))
-    throw new Error('Invalid parameters object passed. Parameters must contain workerSid string');
-  if (!isString(workerChannelSid))
-    throw new Error('Invalid parameters object passed. Parameters must contain workerChannelSid string');
-  if (!isNumber(capacity)) throw new Error('Invalid parameters object passed. Parameters must contain capacity number');
-  if (!isBoolean(available))
-    throw new Error('Invalid parameters object passed. Parameters must contain available boolean');
+  const config = {
+    attempts: 3,
+    workerSid,
+    workerChannelSid,
+    capacity,
+    available,
+  };
 
+  const client = context.getTwilioClient();
+  const taskRouterClient = new TaskRouterUtils(client, config);
   try {
-    const client = context.getTwilioClient();
-    const workerChannelCapacity = await client.taskrouter.v1
-      .workspaces(process.env.TWILIO_FLEX_WORKSPACE_SID)
-      .workers(workerSid)
-      .workerChannels(workerChannelSid)
-      .update({ capacity, available });
+    const workerChannels = await taskRouterClient.updateWorkerChannel(config);
 
     return {
-      success: true,
-      status: 200,
-      workerChannelCapacity,
+      ...workerChannels,
     };
   } catch (error) {
-    return retryHandler(error, parameters, exports.updateWorkerChannel);
+    return { success: false, status: error.status, message: error.message };
   }
 };
 
