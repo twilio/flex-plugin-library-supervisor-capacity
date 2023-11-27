@@ -1,4 +1,4 @@
-import { TaskRouterUtils } from '@twilio/flex-plugins-library-utils';
+const { TaskRouterUtils } = require('@twilio/flex-plugins-library-utils');
 
 /**
  * @param {object} parameters the parameters for the function
@@ -9,7 +9,7 @@ import { TaskRouterUtils } from '@twilio/flex-plugins-library-utils';
  * @description the following method is used to fetch the configured
  *   worker channel
  */
-exports.getWorkerChannels = async function updateWorkerChannel(parameters) {
+exports.getWorkerChannels = async function getWorkerChannels(parameters) {
   const { context, workerSid } = parameters;
 
   const config = {
