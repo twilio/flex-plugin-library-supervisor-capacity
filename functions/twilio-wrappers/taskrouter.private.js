@@ -11,10 +11,13 @@ const { TaskRouterUtils } = require('@twilio/flex-plugins-library-utils');
  */
 exports.getWorkerChannels = async function getWorkerChannels(parameters) {
   const { context, workerSid } = parameters;
-
+  const region = context.TWILIO_REGION ? context.TWILIO_REGION.split('-')[0] : '';
   const config = {
     attempts: 3,
     workerSid,
+    accountSid: context.ACCOUNT_SID,
+    authToken: context.AUTH_TOKEN,
+    region
   };
 
   const client = context.getTwilioClient();
@@ -40,13 +43,16 @@ exports.getWorkerChannels = async function getWorkerChannels(parameters) {
  */
 exports.updateWorkerChannel = async function updateWorkerChannel(parameters) {
   const { context, workerSid, workerChannelSid, capacity, available } = parameters;
-
+  const region = context.TWILIO_REGION ? context.TWILIO_REGION.split('-')[0] : '';
   const config = {
     attempts: 3,
     workerSid,
     workerChannelSid,
     capacity,
     available,
+    accountSid: context.ACCOUNT_SID,
+    authToken: context.AUTH_TOKEN,
+    region
   };
 
   const client = context.getTwilioClient();
