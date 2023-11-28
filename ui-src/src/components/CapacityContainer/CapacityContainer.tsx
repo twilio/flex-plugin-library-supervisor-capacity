@@ -9,7 +9,7 @@ import { SectionHeader } from './CapacityContainerStyles';
 import TaskRouterService, { WorkerChannelCapacityResponse } from '../../service/TaskRouterService';
 import { rules as capacityRules } from '../../types/ServiceConfiguration';
 import CapacityChannel from '../CapacityChannel';
-import Analytics, { Event } from '../../utils/Analytics';
+import { Analytics, Event } from '../../utils/Analytics';
 
 export interface OwnProps {
   worker?: IWorker;
