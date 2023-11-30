@@ -18,7 +18,7 @@ exports.getWorkerChannels = async function getWorkerChannels(parameters) {
     accountSid: context.ACCOUNT_SID,
     authToken: context.AUTH_TOKEN,
     region,
-    workspaceSid: context.TWILIO_FLEX_WORKSPACE_SID,
+    flexWorkSpaceSid: context.TWILIO_FLEX_WORKSPACE_SID,
   };
 
   const client = context.getTwilioClient();
@@ -54,7 +54,7 @@ exports.updateWorkerChannel = async function updateWorkerChannel(parameters) {
     accountSid: context.ACCOUNT_SID,
     authToken: context.AUTH_TOKEN,
     region,
-    workspaceSid: context.TWILIO_FLEX_WORKSPACE_SID,
+    flexWorkSpaceSid: context.TWILIO_FLEX_WORKSPACE_SID,
   };
 
   const client = context.getTwilioClient();
